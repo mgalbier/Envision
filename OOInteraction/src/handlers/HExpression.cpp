@@ -280,7 +280,7 @@ void HExpression::keyPressEvent(Item *target, QKeyEvent *event)
 			{
 				auto ifs =  new IfStatement{};
 				ifs->setCondition(new EmptyExpression{});
-
+				ifs->elseBranch()->append(new ExpressionStatement{new EmptyExpression{}});
 				toFocus = ifs->condition();
 				st = ifs;
 			}

@@ -134,6 +134,8 @@ QList<Item*> ZoomLabelOverlay::itemsThatShouldHaveZoomLabel(Scene* scene)
 {
 	QList<Item*> result;
 
+	//return {};
+
 	const double OVERLAY_SCALE_TRESHOLD = 0.5;
 	auto scalingFactor = scene->mainViewScalingFactor();
 

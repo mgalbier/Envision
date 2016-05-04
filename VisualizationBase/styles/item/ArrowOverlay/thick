@@ -9,4 +9,16 @@
 		<color>#B0000000</color>
 	</arrowBrush>
 	<width>20</width>
+	<selectedLinePen>
+		<width>50.0</width>
+		<style>1</style>
+		<color>#000000</color>
+		<capStyle>0</capStyle>
+		<joinStyle>0</joinStyle>
+	</selectedLinePen>
+	<selectedArrowBrush>
+		<style>1</style>
+		<color>#000000</color>
+	</selectedArrowBrush>
+	<selectedWidth>50</selectedWidth>
 </style>

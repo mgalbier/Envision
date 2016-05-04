@@ -95,8 +95,10 @@ void DiffManager::visualize()
 
 	for (auto change : changes.values())
 	{
+		change->print();
 		// TODO check flags
-		if (change->isFake() || change->onlyStructureChange()) continue;
+		if (change->isFake() || change->onlyStructureChange())
+			continue;
 
 		auto id = change->nodeId();
 
@@ -206,6 +208,7 @@ QSet<Visualization::Item*> DiffManager::findAllItemsWithAncestorsIn(QSet<Visuali
 
 // TODO find good way to return and use Node instead of Id
 bool DiffManager::findChangedNode(Model::TreeManager* treeManager, Model::NodeIdType id, Model::NodeIdType& resultId)
+__attribute__((optnone))
 {
 	if (auto node = const_cast<Model::Node*>(treeManager->nodeIdMap().node(id)))
 	{
@@ -235,30 +238,46 @@ void DiffManager::createOverlaysForChanges(Visualization::ViewItem* diffViewItem
 	diffViewItem->setArrowStyle(arrowLayer, "thick");
 
 	QSet<Visualization::Item*> allItemsToScale;
+
 	for (auto change : changesWithNodes)
 	{
 		QString highlightOverlayStyle;
 		QString highlightOverlayName;
 
+
 		switch (change.changeType_)
 		{
 			case FilePersistence::ChangeType::Deletion:
 				highlightOverlayName = "delete_highlights";
-				highlightOverlayStyle = "delete_no_bg_solid_outline";
+				//highlightOverlayStyle = "delete";
+				highlightOverlayStyle = "delete_light_bg_solid_outline";
+				//highlightOverlayStyle = "delete_no_bg_solid_outline";
+				//highlightOverlayStyle = "delete_dotted_bg_solid_outline";
 				break;
 			case FilePersistence::ChangeType::Insertion:
 				highlightOverlayName = "insert_highlights";
-				highlightOverlayStyle = "insert_no_bg_solid_outline";
+				//highlightOverlayStyle = "insert";
+				highlightOverlayStyle = "insert_light_bg_solid_outline";
+				//highlightOverlayStyle = "insert_no_bg_solid_outline";
+				//highlightOverlayStyle = "insert_dotted_bg_solid_outline";
 				break;
 			case FilePersistence::ChangeType::Move:
 				highlightOverlayName = "move_highlights";
-				highlightOverlayStyle = "move_no_bg_solid_outline";
+				//highlightOverlayStyle = "move";
+				highlightOverlayStyle = "move_light_bg_solid_outline";
+				//highlightOverlayStyle = "move_no_bg_solid_outline";
+				//highlightOverlayStyle = "move_dotted_bg_solid_outline";
 
 				// add arrow for the moved node
+				//diffViewItem->addArrow(const_cast<Model::Node*>(change.oldNode_),
+				//							  const_cast<Model::Node*>(change.newNode_), arrowLayer);
 				break;
 			case FilePersistence::ChangeType::Stationary:
 				highlightOverlayName = "modify_highlights";
-				highlightOverlayStyle = "modify_no_bg_solid_outline";
+				//highlightOverlayStyle = "modify";
+				highlightOverlayStyle = "modify_light_bg_solid_outline";
+				//highlightOverlayStyle = "modify_no_bg_solid_outline";
+				//highlightOverlayStyle = "modify_dotted_bg_solid_outline";
 				break;
 			case FilePersistence::ChangeType::Unclassified:
 				Q_ASSERT(false);
@@ -315,7 +334,8 @@ Visualization::Item* DiffManager::addHighlightAndReturnItem(Model::Node* node, V
 			auto overlay = new Visualization::HighlightOverlay{resultItem,
 					Visualization::HighlightOverlay::itemStyles().get(highlightOverlayStyle)};
 			resultItem->addOverlay(overlay, highlightOverlayName);
-		}
+		} else
+			return addHighlightAndReturnItem(node->parent(), viewItem, highlightOverlayName, highlightOverlayStyle);
 	}
 	return resultItem;
 }
@@ -323,7 +343,7 @@ Visualization::Item* DiffManager::addHighlightAndReturnItem(Model::Node* node, V
 void DiffManager::visualizeChangedNodes(Model::TreeManager* oldVersionManager,
 													 QSet<Model::NodeIdType> changedNodesToVisualize,
 													 Model::TreeManager* newVersionManager, Visualization::ViewItem* diffViewItem)
-{
+__attribute__((optnone)){
 	for (auto id : changedNodesToVisualize)
 	{
 		auto oldNode = const_cast<Model::Node*>(oldVersionManager->nodeIdMap().node(id));
