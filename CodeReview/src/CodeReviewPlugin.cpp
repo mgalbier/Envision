@@ -36,6 +36,10 @@
 
 #include "VersionControlUI/src/items/VDiffComparisonPair.h"
 
+#include "commands/CCodeReview.h"
+
+#include "OOVisualization/src/declarations/VClass.h"
+
 namespace CodeReview {
 
 Logger::Log& CodeReviewPlugin::log()
@@ -48,6 +52,11 @@ bool CodeReviewPlugin::initialize(Core::EnvisionManager&)
 {
 	VersionControlUI::VDiffComparisonPair::setDefaultClassHandler(HReviewableItem::instance());
 	CodeReviewCommentOverlay::setDefaultClassHandler(HCodeReviewOverlay::instance());
+
+	// TODO how to do it nicely: add command to Class
+	auto vClassGenericHandler = dynamic_cast<Interaction::GenericHandler*>(OOVisualization::VClass::defaultClassHandler());
+	vClassGenericHandler->addCommand(new CCodeReview{});
+
 	return true;
 }
 

@@ -28,9 +28,23 @@
 
 #include "codereview_api.h"
 
+#include "VersionControlUI/src/nodes/DiffComparisonPair.h"
+
 #include "nodes/CommentedNode.h"
 
 namespace CodeReview {
+
+using DiffFrames = QList<VersionControlUI::DiffComparisonPair*>;
+
+using OrderedDiffFrames = QList<VersionControlUI::DiffComparisonPair*>;
+
+using GroupedDiffFrames = QList<QList<VersionControlUI::DiffComparisonPair*>>;
+
+using GroupingFunction =
+		std::function<GroupedDiffFrames (DiffFrames diffComparisonPairs)>;
+
+using OrderingFunction =
+		std::function<OrderedDiffFrames (DiffFrames diffComparisonPairs)>;
 
 class CODEREVIEW_API CodeReviewManager
 {
@@ -38,9 +52,17 @@ class CODEREVIEW_API CodeReviewManager
 		CommentedNode* commentedNode(QString nodeId);
 		static CodeReviewManager& instance();
 
+		static QList<QList<VersionControlUI::DiffComparisonPair*>> orderDiffComparisonPairs(
+				GroupingFunction dcpgf, OrderingFunction dcpsf,
+				QList<VersionControlUI::DiffComparisonPair*> diffComparisonPairs);
+
+
 	private:
 		QHash<QString, CommentedNode*> commentedNodes_;
 		CodeReviewManager(QString oldVersion, QString newVersion);
+
+		Model::TreeManager* manager_{};
+
 };
 
 }

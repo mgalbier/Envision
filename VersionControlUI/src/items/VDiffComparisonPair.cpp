@@ -297,7 +297,7 @@ qreal VDiffComparisonPair::scaleFactor()
 	qreal scale;
 	if (factor >= 1.0)
 		scale = 1.0;
-	else if (factor >= 0.03)
+	else if (factor >= 0.007)
 		scale = 1.0/factor;
 	else
 		scale = 1.0;

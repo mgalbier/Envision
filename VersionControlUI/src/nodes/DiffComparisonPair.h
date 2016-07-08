@@ -74,12 +74,21 @@ class VERSIONCONTROLUI_API DiffComparisonPair : public Super<Visualization::UINo
 
 		static QString computeObjectPath(Model::Node* node);
 
+		void addOldChangedNode(Model::Node* oldNode);
+		void addNewChangedNode(Model::Node* newNode);
+
+		QSet<Model::Node*> oldChangedNodes();
+		QSet<Model::Node*> newChangedNodes();
+
 	private:
 		bool isDummyDiffComparisonPair_{false};
 		bool twoObjectPathsDefined_{};
 
 		Model::Node* oldVersionNode_{};
 		Model::Node* newVersionNode_{};
+
+		QSet<Model::Node*> oldChangedNodes_;
+		QSet<Model::Node*> newChangedNodes_;
 
 		QString comparisonName_;
 
@@ -112,5 +121,11 @@ inline QList<ObjectPathCrumbData> DiffComparisonPair::objectPathCrumbsDataOldNod
 
 inline QList<ObjectPathCrumbData> DiffComparisonPair::objectPathCrumbsDataNewNode()
 { return objectPathCrumbsDataNewNode_; }
+
+inline void DiffComparisonPair::addOldChangedNode(Model::Node* oldNode) {oldChangedNodes_.insert(oldNode);}
+inline void DiffComparisonPair::addNewChangedNode(Model::Node* newNode) {newChangedNodes_.insert(newNode);}
+
+inline QSet<Model::Node*> DiffComparisonPair::oldChangedNodes() {return oldChangedNodes_;}
+inline QSet<Model::Node*> DiffComparisonPair::newChangedNodes() {return newChangedNodes_;}
 
 }
