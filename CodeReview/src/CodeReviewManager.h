@@ -31,6 +31,8 @@
 
 #include "VersionControlUI/src/nodes/DiffFrame.h"
 
+#include "VisualizationBase/src/items/Item.h"
+
 namespace CodeReview {
 
 using GroupingFunction =
@@ -49,10 +51,13 @@ class CODEREVIEW_API CodeReviewManager
 				GroupingFunction groupingFunction, OrderingFunction orderingFunction,
 				QList<VersionControlUI::DiffFrame*> diffFrames);
 
+		void addFocusItem(Visualization::Item* item, int step);
+		Visualization::Item* focusItemForStep(int step);
 
 	private:
 		QHash<QString, CommentedNode*> commentedNodes_;
 		CodeReviewManager(QString oldVersion, QString newVersion);
+		QList<Visualization::Item*> focusList_;
 
 };
 

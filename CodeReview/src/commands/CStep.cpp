@@ -24,7 +24,7 @@
 **
 ***********************************************************************************************************************/
 
-#include "CCodeReviewComment.h"
+#include "CStep.h"
 
 #include "../nodes/CommentedNode.h"
 #include "../nodes/ReviewComment.h"
@@ -45,9 +45,9 @@ using namespace Visualization;
 
 namespace CodeReview {
 
-CCodeReviewComment::CCodeReviewComment() : Command{"comment"} {}
+CStep::CStep() : Command{"step"} {}
 
-bool CCodeReviewComment::canInterpret(Visualization::Item*, Visualization::Item*,
+bool CStep::canInterpret(Visualization::Item*, Visualization::Item*,
 		const QStringList& commandTokens, const std::unique_ptr<Visualization::Cursor>& )
 {
 	if (commandTokens.size() > 0)
@@ -55,41 +55,26 @@ bool CCodeReviewComment::canInterpret(Visualization::Item*, Visualization::Item*
 	return false;
 }
 
-Interaction::CommandResult* CCodeReviewComment::execute(Visualization::Item* source, Visualization::Item*,
-				const QStringList& commandTokens, const std::unique_ptr<Visualization::Cursor>&)
+Interaction::CommandResult* CStep::execute(Visualization::Item*, Visualization::Item*,
+				const QStringList&, const std::unique_ptr<Visualization::Cursor>&)
 {
-	auto tokens = commandTokens;
-	tokens.takeFirst();
-	if (!tokens.isEmpty())
-	{
-		CodeReviewManager::instance().addFocusItem(source, tokens.takeFirst().toInt());
+
+	auto focusItem = CodeReviewManager::instance().focusItemForStep(currentStep_);
+
+	if (!focusItem){
+		currentStep_ = 0;
+		focusItem = CodeReviewManager::instance().focusItemForStep(currentStep_);
 	}
 
-	auto ancestorWithNodeItem = source->findAncestorWithNode();
+	Visualization::VisualizationManager::instance().mainView()->
+			centerOn(CodeReviewManager::instance().focusItemForStep(currentStep_));
 
-	for (auto manager : Model::AllTreeManagers::instance().loadedManagers())
-	{
-		auto id = manager->nodeIdMap().idIfExists(ancestorWithNodeItem->node());
-
-		if (!id.isNull())
-		{
-			auto commentedNode = CodeReviewManager::instance().commentedNode(id.toString());
-			commentedNode->reviewComments()->append(new ReviewComment{});
-
-			// only create highlight if not already existent
-			if (!source->overlay<CodeReviewCommentOverlay>("CodeReviewComment"))
-			{
-				auto overlay = new CodeReviewCommentOverlay{source, commentedNode};
-				source->addOverlay(overlay, "CodeReviewComment");
-			}
-			break;
-		}
-	}
+	currentStep_++;
 
 	return new Interaction::CommandResult{};
 }
 
-QList<Interaction::CommandSuggestion*> CCodeReviewComment::suggest(Visualization::Item*, Visualization::Item*,
+QList<Interaction::CommandSuggestion*> CStep::suggest(Visualization::Item*, Visualization::Item*,
 		const QString& textSoFar, const std::unique_ptr<Visualization::Cursor>&)
 {
 	if (name().startsWith(textSoFar))

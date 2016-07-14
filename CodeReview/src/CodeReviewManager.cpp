@@ -41,6 +41,7 @@ CodeReviewManager& CodeReviewManager::instance()
 
 CommentedNode* CodeReviewManager::commentedNode(QString nodeId)
 {
+	qDebug() << "commentedNode" << commentedNodes_.size();
 	auto iter = commentedNodes_.constFind(nodeId);
 	if (iter != commentedNodes_.constEnd()) return *iter;
 
@@ -62,5 +63,16 @@ QList<QList<VersionControlUI::DiffFrame*>> CodeReviewManager::orderDiffFrames(
 	}
 	return result;
 }
+
+void CodeReviewManager::addFocusItem(Visualization::Item* item, int step)
+{
+	focusList_.insert(step, item);
+}
+
+Visualization::Item* CodeReviewManager::focusItemForStep(int step)
+{
+	return focusList_.value(step);
+}
+
 
 }
