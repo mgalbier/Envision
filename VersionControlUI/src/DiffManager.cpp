@@ -443,7 +443,7 @@ void DiffManager::showDiff(QString oldVersion, QString newVersion)
 	auto diffFramesAndSetup = computeDiffFramesAndOverlays(oldVersion, newVersion, diffViewItem);
 	auto diffFrames = diffFramesAndSetup.diffFrames_;
 	for (auto diffFrame : diffFrames)
-		diffViewItem->insertNode(diffFrame, {row++, 0});
+		diffViewItem->insertNode(diffFrame, {0, row++});
 
 	// switch to the newly created view
 	Visualization::VisualizationManager::instance().mainScene()->viewItems()->switchToView(diffViewItem);

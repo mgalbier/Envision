@@ -129,8 +129,8 @@ Interaction::CommandResult* CCodeReview::execute(Visualization::Item* source, Vi
 	oldRev = unambigousPrefixPerRevision_.value(oldRev, oldRev);
 	newRev = unambigousPrefixPerRevision_.value(newRev, newRev);
 
-	VersionControlUI::DiffManager diffManager{managerName, {Model::SymbolMatcher{"Class"},
-																			  Model::SymbolMatcher{"Method"}}};
+	VersionControlUI::DiffManager diffManager{managerName,
+																			  {Model::SymbolMatcher{"Method"}}};
 
 	auto reviewViewName = REVIEW_VIEW_PREFIX + "_" + managerName +
 			"_" + oldRev + "_" + newRev;

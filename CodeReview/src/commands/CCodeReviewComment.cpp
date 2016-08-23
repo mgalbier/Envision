@@ -77,6 +77,7 @@ Interaction::CommandResult* CCodeReviewComment::execute(Visualization::Item* sou
 			{
 				auto overlay = new CodeReviewCommentOverlay{ancestorWithNodeItem, nodeReviews};
 				ancestorWithNodeItem->addOverlay(overlay, "CodeReviewComment");
+				CodeReviewManager::instance().registerNodeReviewsWithOverlay(nodeReviews, overlay);
 			}
 			break;
 		}
